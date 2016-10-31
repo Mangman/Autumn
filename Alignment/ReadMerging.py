@@ -31,5 +31,5 @@ with open("1a.fq") as f1, open("2a.fq") as f2, open("output.fasta", "w") as outp
 				i += 1
 			print "ended"
 			sys.exit()
-	catch StopIteration :
+	except StopIteration :
 		pass
