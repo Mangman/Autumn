@@ -3,7 +3,7 @@
 
 import sys
 
-def reverseComplimetary(s) :
+def reverseComplimentary(s) :
 	complimentary = {'A': 'T',
 				     'T': 'A',
 				     'G': 'C',
@@ -15,7 +15,8 @@ def reverseComplimetary(s) :
 		else :
 			return ch
 
-	return map(transform, s[::-1])
+	result = "".join(map(transform, s[::-1]))
+	return result
 
 def matrixPrint (matrix, s1, s2) :
 		#Пишем буквы на горизонтальной оси
