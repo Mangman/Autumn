@@ -87,6 +87,7 @@ class AlignmentMatrix :
 					self.trace[i][j] = 3
 
 				score = maximum+delta
+				#  Зануление отрицательных скоров для локального выравнивания
 				if self.isGlobal != 1 :
 					if score < 0 : 
 						score = 0
@@ -121,6 +122,7 @@ class AlignmentMatrix :
 				aligned1 += '-'
 				aligned2 += self.s2[i-1]
 				i = i-1
+			#  Сложные расчеты (выравнивание кусков слева и справа для последующего мерджа)
 			elif path == 0 :
 				rightAddition = self.s2[self.largestScore[1]:]
 				leftAddition = self.s1[0:j]
@@ -128,21 +130,36 @@ class AlignmentMatrix :
 				aligned2 = "-"*len(leftAddition)+aligned2[::-1]+rightAddition
 				break
 		
+		#  При локальном выравнивании части уже развернуты
 		if self.isGlobal :
 			aligned1 = aligned1[::-1]
 			aligned2 = aligned2[::-1]
 		return (aligned1, aligned2)
 
-def merge (first, second) :
+def merge (first, second, quality1, quality2) :
 	result = ""
+
+	q1 = 0
+	q2 = 0
 	for i in range (len(first)) :
 		a = first[i]
 		b = second[i]
 
 		appendingChar = ''
 		if a == b : appendingChar = a
-		elif a == '-' : appendingChar = b
-		elif b == '-' : appendingChar = a
-		elif a != b : appendingChar = 'N'#  TODO: хз что делать ;( 
+		elif a == '-' : 
+			appendingChar = b
+			q1 -= 1
+		elif b == '-' : 
+			appendingChar = a
+			q2 -= 1
+		elif a != b : 
+			if ord(quality1[q1]) > ord(quality2[q2]) :
+				appendingChar = a
+			else :
+				appendingChar = b 
 		result += appendingChar
+
+		q1 += 1
+		q2 += 1
 	return result
