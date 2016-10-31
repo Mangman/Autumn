@@ -107,6 +107,7 @@ class AlignmentMatrix :
 
 		merged = ""
 
+		#  Выравнивание по пути из матрицы пути
 		while (i != 0 and j != 0) :
 			path = self.trace[i][j]
 			if path == 2 :
