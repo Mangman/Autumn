@@ -18,7 +18,6 @@ args = parser.parse_args()
 reads = loadFastq(args.reads)
 
 tic = time.clock()
-
 #  Инициализация графа
 a = BruijnGraph(reads, args.k)
 
@@ -30,4 +29,3 @@ sys.stdout = oldStdout
 
 toc = time.clock()
 print ">Process ended.\n>Time spent-- "+str(toc - tic)
-	
