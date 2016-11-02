@@ -5,7 +5,7 @@ import sys
 
 from itertools import islice
 
-def reverseComplimentary(s) :
+def reverse_complimentary(s) :
 	complimentary = {'A': 'T',
 				     'T': 'A',
 				     'G': 'C',
@@ -20,9 +20,9 @@ def reverseComplimentary(s) :
 	result = "".join(map(transform, s[::-1]))
 	return result
 
-def loadFastq (filePath) :
+def load_fastq (file_path) :
 	reads = []
-	with open(filePath) as f :
+	with open(file_path) as f :
 		for line in islice(f, 1, None, 4) :
 			reads.append(line.strip())
 	return reads

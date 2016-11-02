@@ -4,43 +4,41 @@
 import sys
 from collections import defaultdict
 
-from Utilities import reverseComplimentary 
+from Utilities import reverse_complimentary 
 
 class BruijnGraph :
 	edges = defaultdict(dict)# {name1: {name2: [part, count] } }
 	k = None
 
-	def __init__(self, reads, partLen) :
-		self.k = partLen+1
+	def __init__(self, reads, part_len) :
+		self.k = part_len+1
 
-		self._fillEdges(reads)
+		self._fill_edges(reads)
 
 
-	def _fillEdges(self, reads) :
+	def _fill_edges(self, reads) :
 		for read in reads :
-			#  Обозначения ребра графа
-
 			for i in range(self.k, len(read)+1):
-				currentPart = read[i-self.k : i]
-				self._setEdge(currentPart)
-				self._setEdge(reverseComplimentary(currentPart))
+				current_part = read[i-self.k : i]
+				self._set_edge(current_part)
+				self._set_edge(reverse_complimentary(current_part))
 
-	def _setEdge (self, part) :
+	def _set_edge (self, part) :
 		#  Обозначение вершин грава
-		firstChunk = part[:-1]
-		secondChunk = part[1:]
+		first_chunk = part[:-1]
+		second_chunk = part[1:]
 		#  Инициализация при первом обращении (Медленно, возможно)
-		if secondChunk not in self.edges[firstChunk] :
-			self.edges[firstChunk][secondChunk] = [part, 0]
+		if second_chunk not in self.edges[first_chunk] :
+			self.edges[first_chunk][second_chunk] = [part, 0]
 		#  Увеличение количества встреч наложения
-		self.edges[firstChunk][secondChunk][1] += 1
+		self.edges[first_chunk][second_chunk][1] += 1
 
-	def generateGraph (self) :
+	def generate_graph (self) :
 		with open('Graph.dot', 'w') as output :
-			oldStdout = sys.stdout 
+			old_stdout = sys.stdout 
 			sys.stdout = output
 			for name1, val in self.edges.items() :
 				for name2, arr in val.items() :
 					print "{} -> {} [label = \"{}\"];".format(name1, name2, arr[1])
-			sys.stdout = oldStdout
+			sys.stdout = old_stdout
 

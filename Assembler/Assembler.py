@@ -5,7 +5,7 @@ import sys
 import argparse
 import time
 
-from Utilities import reverseComplimentary, loadFastq
+from Utilities import reverse_complimentary, load_fastq
 from BruijnGraph import BruijnGraph
 
 
@@ -15,7 +15,7 @@ parser.add_argument('-k', type=int, help = 'Length of parts, we set as verticies
 
 #  Парсинг fastq
 args = parser.parse_args()
-reads = loadFastq(args.reads)
+reads = load_fastq(args.reads)
 
 tic = time.clock()
 #  Инициализация графа
@@ -23,12 +23,12 @@ a = BruijnGraph(reads, args.k)
 
 #  Распечатка
 with open('Graph.output', 'w') as output :
-	oldStdout = sys.stdout
+	old_stdout = sys.stdout
 	sys.stdout = output
 	print a.edges
-	sys.stdout = oldStdout
+	sys.stdout = old_stdout
 
-a.generateGraph()
+a.generate_graph()
 
 toc = time.clock()
 print ">Process ended.\n>Time spent-- "+str(toc - tic)
