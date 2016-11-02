@@ -22,10 +22,15 @@ tic = time.clock()
 a = BruijnGraph(reads, args.k)
 
 #  Распечатка
-oldStdout = sys.stdout
-sys.stdout = open('Graph.output', 'w')
-print a.edges
-sys.stdout = oldStdout
+with open('Graph.output', 'w') as output :
+	oldStdout = sys.stdout
+	sys.stdout = output
+	print a.edges
+	sys.stdout = oldStdout
+
+a.generateGraph()
 
 toc = time.clock()
 print ">Process ended.\n>Time spent-- "+str(toc - tic)
+
+print len(a.edges.keys())

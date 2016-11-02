@@ -1,46 +1,46 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import sys
+from collections import defaultdict
+
+from Utilities import reverseComplimentary 
+
 class BruijnGraph :
-	edges = {}	 # {name1: {name2: [part, count] } }
+	edges = defaultdict(dict)# {name1: {name2: [part, count] } }
 	k = None
 
-	#  КОМПЛИМЕНТРАНОСТЬ КОМПЛИМЕНТАРНОСТЬ
 	def __init__(self, reads, partLen) :
 		self.k = partLen+1
 
-		#  Не хочу два раза проходить ;(
-		self._fillEdgedWithSadLonelyEmptiness(reads)
-		self._fillEdgesWithRealShit(reads)
-
-	def _fillEdgedWithSadLonelyEmptiness(self, reads) :
-		for read in reads:
-			#  Проход рамкой размером с вершину графа
-			currentPart = read[0:self.k-1]
-			
-			for ch in read[self.k-1:] :
-				#  Инициализация словаря
-				if currentPart not in self.edges :
-					self.edges[currentPart] = {}
-				#  Присоединяем следующий нуклеотид и удаляем первый для сдвига рамки
-				currentPart = currentPart[1:]
-				currentPart += ch
+		self._fillEdges(reads)
 
 
-	def _fillEdgesWithRealShit (self, reads) :
+	def _fillEdges(self, reads) :
 		for read in reads :
 			#  Обозначения ребра графа
-			currentPart = read[0:self.k]
-			
-			for ch in read[self.k:] :
-				#  Обозначение вершин грава
-				firstChunk = currentPart[0:self.k-1]
-				secondChunk = currentPart[1:]
-				#  Инициализация при первом обращении (Медленно, возможно)
-				if secondChunk not in self.edges[firstChunk] :
-					self.edges[firstChunk][secondChunk] = [currentPart, 0]
-				#  Увеличение количества встреч наложения
-				self.edges[firstChunk][secondChunk][1] += 1
-				#  Присоединяем следующий нуклеотид и удаляем первый для сдвига рамки
-				currentPart = currentPart[1:]
-				currentPart += ch
+
+			for i in range(self.k, len(read)+1):
+				currentPart = read[i-self.k : i]
+				self._setEdge(currentPart)
+				self._setEdge(reverseComplimentary(currentPart))
+
+	def _setEdge (self, part) :
+		#  Обозначение вершин грава
+		firstChunk = part[:-1]
+		secondChunk = part[1:]
+		#  Инициализация при первом обращении (Медленно, возможно)
+		if secondChunk not in self.edges[firstChunk] :
+			self.edges[firstChunk][secondChunk] = [part, 0]
+		#  Увеличение количества встреч наложения
+		self.edges[firstChunk][secondChunk][1] += 1
+
+	def generateGraph (self) :
+		with open('Graph.dot', 'w') as output :
+			oldStdout = sys.stdout 
+			sys.stdout = output
+			for name1, val in self.edges.items() :
+				for name2, arr in val.items() :
+					print "{} -> {} [label = \"{}\"];".format(name1, name2, arr[1])
+			sys.stdout = oldStdout
+
