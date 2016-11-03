@@ -5,7 +5,9 @@ import sys
 import argparse
 import time
 
-from Utilities import reverse_complimentary, load_fastq
+from collections import defaultdict
+
+from Utilities import reverse_complimentary, load_fastq, generate_dot_graph
 from BruijnGraph import BruijnGraph
 
 
@@ -25,10 +27,10 @@ a = BruijnGraph(reads, args.k)
 with open('Graph.output', 'w') as output :
 	old_stdout = sys.stdout
 	sys.stdout = output
-	print a.edges
 	sys.stdout = old_stdout
 
-a.generate_graph()
+a.condensate()
+generate_dot_graph(a.edges, 'conprsd.dot')
 
 toc = time.clock()
 print ">Process ended.\n>Time spent-- "+str(toc - tic)
