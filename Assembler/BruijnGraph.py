@@ -40,34 +40,38 @@ class BruijnGraph :
 
 	def condensate (self) :
 		
-		join_counter = 0
+		old_join_counter = 0
+		join_counter = old_join_counter
 
 		while (True) :
 			names = deepcopy(self.edges.keys())
 			for current in names :
+				print "heh"
 				if len(self.edges[current]) == 1 :
-					#print "phase 1"
 					succeding = list(self.edges[current])[0]
-					#print len(self.incoming[succeding])
 					if len(self.incoming[succeding]) == 1 :
-						#print "phase 2"
+						
 						current_link = self.edges[current][succeding]
-
-						if len(self.incoming[current]) > 1 :
-							print True
 						for incoming in self.incoming[current] :
 							incoming_link = self.edges[incoming][current]
 							new_link = [incoming_link[0]+current_link[0][-1], (incoming_link[1]+current_link[1])/2]
 
 							del self.edges[incoming][current]
 							self.edges[incoming][succeding] = new_link
+							self.incoming[succeding].add(incoming)
+							join_counter += 1 
 							#print 'compressed'
+
+						self.incoming[succeding].remove(current)
+						del self.edges[current]
 				else :
 					print "outta sequence"
+			if join_counter > old_join_counter :
+				old_join_counter = join_counter
+				print "next"
+			else :
+				print "end"
 			break
-
-
-
 
 	# def condensate (self, condensated) :
 	# 	print "lal"
