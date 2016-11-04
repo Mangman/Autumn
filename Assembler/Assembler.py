@@ -12,7 +12,7 @@ from BruijnGraph import BruijnGraph
 
 
 parser = argparse.ArgumentParser(description='Assembles reads to genome.')
-parser.add_argument('-r', '--reads', type=str, help='Fasta file with reads for assempling')
+parser.add_argument('-r', '--reads', type=str, help='Fasta file with reads for assembling')
 parser.add_argument('-k', type=int, help = 'Length of parts, we set as verticies')
 
 #  Парсинг fastq
