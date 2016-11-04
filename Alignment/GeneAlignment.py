@@ -8,23 +8,29 @@ import sys
 import argparse
 
 class GenesMismatchTable :
-	table = {} #  Массив Тьюплов
+	table = {} 
 	entries = {}
 
 	def __init__ (self, genesFile) :
-		currentGene = ""
-		for line in genesFile :		
-			if line[0] == '>' :
-				if currentGene != "":
-					self.entries[currentGene] = 0
-					self.table[currentGene] = [0]*len(currentGene)
-				currentGene = ""
+		# #  Костыльный метод
+		# currentGene = ""
+		# for line in genesFile :		
+		# 	if line[0] == '>' :
+		# 		if currentGene != "":
+		# 			self.entries[currentGene] = 0
+		# 			self.table[currentGene] = [0]*len(currentGene)
+		# 		currentGene = ""
+		# 		continue
+		# 	else :
+		# 		currentGene += line.strip()
+		for line in genesFile :
+			if line[0] == ">" :
 				continue
 			else :
-				currentGene += line.strip()
+				currentGene = line.strip()
+				self.entries[currentGene] = 0
+				self.table[currentGene] = [0]*len(currentGene)
 		
-		self.entries[currentGene] = 0
-		self.table[currentGene] = [0]*len(currentGene)
 
 	def appendMismatches (self, gene, alignedGene, alignedRead) :
 		originalGenePos = -1
@@ -59,27 +65,22 @@ with open(args.reads) as reads, open(args.genes) as genes:
 			bestScore = 0
 			bestMatrix = AlignmentMatrix (False, '', '')
 			bestGene = ""
-			for gene in mismatchTable.entries.keys() :
-				print gene, read
+			for gene in mismatchTable.table.keys() :
 				currenMatrix = AlignmentMatrix(False, gene, read)
-				print currenMatrix.largestScore[0]
-				matrixPrint(currenMatrix, gene, read)
+				print currenMatrix.largestScore
+				print ""
+				print gene
+				print ""
+				print read
 				if currenMatrix.largestScore[0] > bestMatrix.largestScore[0] :
 					bestMatrix = currenMatrix
 					bestGene = gene
+			print ""
 
 			res = bestMatrix.alignReads()
 			#  Забил на память. Лучше пофиксить
 			mismatchTable.appendMismatches(bestGene, res[0], res[1])
-			print ""
 			i += 1
-			if i == 5: break 
-	print mismatchTable.entries
-
-
-
-
-
-
-
+			if i == 50: break 
+	print mismatchTable.table
 				

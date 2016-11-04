@@ -135,7 +135,9 @@ class AlignmentMatrix :
 		if self.isGlobal :
 			aligned1 = aligned1[::-1]
 			aligned2 = aligned2[::-1]
-		return (aligned1, aligned2)
+		print aligned1	
+		print aligned2
+		return aligned1, aligned2
 
 def merge (first, second, quality1, quality2) :
 	result = ""
