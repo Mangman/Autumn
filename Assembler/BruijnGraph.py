@@ -47,9 +47,9 @@ class BruijnGraph :
 			names = deepcopy(self.edges.keys())
 			for current in names :
 				print "heh"
-				if len(self.edges[current]) == 1 :
+				if len(self.edges[current]) == 1 and len(self.incoming[current]) == 1 :
 					succeding = list(self.edges[current])[0]
-					if len(self.incoming[succeding]) == 1 :
+					if len(self.incoming[succeding]) == 1 and len(self.edges[succeding]) == 1 :
 						
 						current_link = self.edges[current][succeding]
 						for incoming in self.incoming[current] :
